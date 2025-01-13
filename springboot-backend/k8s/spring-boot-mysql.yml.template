@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  ports:
+  - port: 3306
+    targetPort: 3306
+  selector:
+    app: mysql
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  annotations:
+    volume.beta.kubernetes.io/storage-class: aws-ebs
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+       - name: mysql
+         image: mysql:8.0
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: Shafia@987
+        - name: MYSQL_DATABASE
+          value: employee_management_system
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-backend
+  labels:
+    app: springboot-backend
+spec:
+  selector:
+    matchLabels:
+      app: springboot-backend
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: springboot-backend
+      labels:
+        app: springboot-backend
+    spec:
+      containers:
+      - name: spring-boot-app
+        imagePullPolicy: Always
+        image: springboot-backend:latest
+        env:
+          - name: DB_HOST
+            value: mysql-service
+        ports:
+          - containerPort: 8080
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-backend-service
+spec:
+  type: LoadBalancer
+  ports:
+   - port: 8080
+     targetPort: 8080
+  selector:
+    app: springboot-backend	

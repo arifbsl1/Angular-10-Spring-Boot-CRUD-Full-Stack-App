@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EmployeeService } from '../employee.service';
-import { Employee } from '../employee';
+import { Employees } from '../employee';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class UpdateEmployeeComponent implements OnInit {
 
   id: number;
-  employee: Employee = new Employee();
+  employee: Employees = new Employees();
   constructor(private employeeService: EmployeeService,
     private route: ActivatedRoute,
     private router: Router) { }

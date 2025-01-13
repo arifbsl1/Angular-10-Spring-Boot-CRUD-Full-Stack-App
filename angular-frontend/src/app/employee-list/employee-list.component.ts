@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Employee } from '../employee'
+import { Employees } from '../employee'
 import { EmployeeService } from '../employee.service'
 import { Router } from '@angular/router';
 @Component({
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class EmployeeListComponent implements OnInit {
 
-  employees: Employee[];
+  employees: Employees[];
 
   constructor(private employeeService: EmployeeService,
     private router: Router) { }
