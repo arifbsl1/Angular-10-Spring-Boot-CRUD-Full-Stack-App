@@ -8,8 +8,10 @@ pipeline {
         }
         stage('Build') {
             steps {
+                sh 'pwd'
             	echo "current working directory"
                 bat 'cd'
+				bat 'cd'
                 bat 'mvn clean install'
             }
         }
