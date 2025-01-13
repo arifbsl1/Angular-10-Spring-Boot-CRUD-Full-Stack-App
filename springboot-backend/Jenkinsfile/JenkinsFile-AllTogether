@@ -3,17 +3,17 @@
 worker = "worker-${UUID.randomUUID().toString()}"
 
 podTemplate(label: worker, containers: [
-  containerTemplate(name: 'maven', image: '303679435142.dkr.ecr.eu-west-1.amazonaws.com/maven-dev:latest', command: 'cat', ttyEnabled: true),
-  containerTemplate(name: 'db', image: 'mysql:5.7', ttyEnabled: true, envVars: [
+  containerTemplate(name: 'maven', image: '506807812764.dkr.ecr.us-east-1.amazonaws.com/maven-dev:latest', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'db', image: 'mysql:8.0', ttyEnabled: true, envVars: [
     envVar(key: 'MYSQL_ROOT_PASSWORD', value: 'Shafia@987'),
-    envVar(key: 'MYSQL_DATABASE', value: 'springboot_mysql_example')],
+    envVar(key: 'MYSQL_DATABASE', value: 'employee_management_system')],
     ports: [portMapping(name: 'mysql', containerPort: 3306, hostPort: 3306)
     ])
   ]) {
   
   node(worker) {
     stage('Cloning the repo...') {
-      git 'https://github.com/twotoforty/spring-boot-example.git'
+      git 'https://github.com/arifbsl1/Angular-10-Spring-Boot-CRUD-Full-Stack-App.git'
     }
 
     stage('Building...') {
@@ -27,7 +27,7 @@ podTemplate(label: worker, containers: [
     stage('Integration testing...') {
       container('maven') {
         sh """
-          mvn -Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/springboot_mysql_example test
+          mvn -Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/employee_management_system test
         """
       }
     }
@@ -55,7 +55,7 @@ podTemplate(label: worker, containers: [
   node(worker) {
 
     stage('Cloning the repo...') {
-      git 'https://github.com/twotoforty/spring-boot-example.git'
+      git 'https://github.com/arifbsl1/Angular-10-Spring-Boot-CRUD-Full-Stack-App.git'
     }
 
     stage('Getting the archifact...') {
@@ -82,7 +82,7 @@ podTemplate(label: worker, containers: [
 
     stage('Pushing to registry...') {
       container('docker') {
-        docker.withRegistry('https://303679435142.dkr.ecr.eu-west-1.amazonaws.com', 'ecr:eu-west-1:d9245da2-b705-4a6a-a99a-bafbc95a36ca') {
+        docker.withRegistry('https://506807812764.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:d9245da2-b705-4a6a-a99a-bafbc95a36ca') {
           sh """
             docker push ${AMAZON_ECS_REGISTRY}/${DOCKER_IMAGE_NAME_SPRING_BOOT_EXAMPLE}:\${TAG}-${gitCommit}
             docker push ${AMAZON_ECS_REGISTRY}/${DOCKER_IMAGE_NAME_SPRING_BOOT_EXAMPLE}:latest
@@ -110,7 +110,7 @@ podTemplate(label: worker, containers: [
   node(worker) {
 
     stage('Cloning the repo...') {
-      git 'https://github.com/twotoforty/spring-boot-example.git'
+      git 'https://github.com/arifbsl1/Angular-10-Spring-Boot-CRUD-Full-Stack-App.git'
     }
 
     def gitCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
@@ -216,7 +216,7 @@ podTemplate(label: worker, containers: [
   node(worker) {
 
     stage('Cloning the repo...') {
-      git 'https://github.com/twotoforty/spring-boot-example.git'
+      git 'https://github.com/arifbsl1/Angular-10-Spring-Boot-CRUD-Full-Stack-App.git'
     }
 
     stage('Updating the Kubernetes template...') {

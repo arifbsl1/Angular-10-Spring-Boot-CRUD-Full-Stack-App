@@ -21,7 +21,7 @@ podTemplate(label: worker, containers: [
   
   node(worker) {
     stage('Cloning the repo...') {
-      git 'https://github.com/twotoforty/spring-boot-example.git'
+      git 'https://github.com/arifbsl1/Angular-10-Spring-Boot-CRUD-Full-Stack-App.git'
     }
 
     stage('Building...') {
@@ -35,7 +35,7 @@ podTemplate(label: worker, containers: [
     stage('Integration testing...') {
       container('maven') {
         sh """
-          mvn --batch-mode -Dtest=SpringBootMySqlApplicationTests -Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/springboot_mysql_example test
+          mvn --batch-mode -Dtest=SpringBootMySqlApplicationTests -Dspring.datasource.url=jdbc:mysql://${DB_HOST:localhost}:3306/employee_management_system?createDatabaseIfNotExist=true test
         """
       }
     }
