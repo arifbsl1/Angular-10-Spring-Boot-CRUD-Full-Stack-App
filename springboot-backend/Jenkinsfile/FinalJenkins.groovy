@@ -9,7 +9,6 @@ pipeline {
         stage('Build') {
             steps {
             	sh 'pwd'
-            	sh 'cd C:\JavaCodes\Angular10Springboot\Angular-10-Spring-Boot-CRUD-Full-Stack-App\springboot-backend'
                 sh 'mvn clean install'
             }
         }
